@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Confirmation</title>
+    <script>
+        function acceptOffer() {
+            // Get the email address from the input field
+            var email = document.getElementById('email').value;
+            // Create the JSON object to send
+            var data = JSON.stringify({
+                "email_address": email,
+                "offer_accepted": "Yes"
+            });
+
+            // Create a new XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+            // Configure it: POST-request for the URL
+            xhr.open('POST', 'https://capture.eu-west-1.nest.messagebird.com/webhooks/03f77965-b823-47e3-bab0-23df5f9eaed6/42a84fdc-9f77-474a-ae25-25b1e869c57a', true);
+            // Set the content type to JSON
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            // Set up a function that is called when the request is completed
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    // Request was successful, handle the response
+                    alert('Offer accepted successfully!');
+                } else {
+                    // Request failed
+                    alert('Failed to accept the offer. Please try again.');
+                }
+            };
+            // Send the JSON data
+            xhr.send(data);
+        }
+    </script>
+</head>
+<body>
+    <h2>Confirm Your Email Address</h2>
+    <p>Please confirm your email address to continue.</p>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    <button onclick="acceptOffer()">Accept Offer</button>
+</body>
+</html>
