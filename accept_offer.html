@@ -4,34 +4,46 @@
     <meta charset="UTF-8">
     <title>Email Confirmation</title>
     <script>
+        // Function to parse URL parameters
+        function getURLParameter(name) {
+            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
+        }
+
+        // Function to set email address from URL parameter
+        function setEmailFromURL() {
+            var email = getURLParameter('email'); // "email" is the parameter name in the URL
+            if (email) {
+                document.getElementById('email').value = email;
+            }
+        }
+
+        // Function to send the POST request
         function acceptOffer() {
-            // Get the email address from the input field
             var email = document.getElementById('email').value;
-            // Create the JSON object to send
             var data = JSON.stringify({
                 "email_address": email,
                 "offer_accepted": "Yes"
             });
 
-            // Create a new XMLHttpRequest
             var xhr = new XMLHttpRequest();
-            // Configure it: POST-request for the URL
             xhr.open('POST', 'https://capture.eu-west-1.nest.messagebird.com/webhooks/03f77965-b823-47e3-bab0-23df5f9eaed6/42a84fdc-9f77-474a-ae25-25b1e869c57a', true);
-            // Set the content type to JSON
             xhr.setRequestHeader('Content-Type', 'application/json');
-            // Set up a function that is called when the request is completed
+
             xhr.onload = function () {
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    // Request was successful, handle the response
                     alert('Offer accepted successfully!');
                 } else {
-                    // Request failed
                     alert('Failed to accept the offer. Please try again.');
                 }
             };
-            // Send the JSON data
+
             xhr.send(data);
         }
+
+        // Set the email when the page loads
+        window.onload = function() {
+            setEmailFromURL();
+        };
     </script>
 </head>
 <body>
